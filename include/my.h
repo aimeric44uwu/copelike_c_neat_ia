@@ -20,26 +20,59 @@
 #define PI 3.14159265
 
 #define BORDER 50
-#define CAR_BASE 180
+#define CAR_BASE 180 // default orientation of the car
 #define WINDOW_W 1800
 #define WINDOW_H 1700
 #define WINDOW_BPP 32
 
-#define DEBUG 1
+
 
 #define START_X 825.00
 #define START_Y 1470.00
 
-#define CAR_RATIO 0.13
+#define CAR_RATIO 0.12
 
+#define FW_MX_SP 10
+
+#define LIDAR_ANGLE 60
+#define LID_DEMIANG LIDAR_ANGLE / 2
 
 #define EVNT programm->windows.event
 #define WIND programm->windows.window
 #define VMODE programm->windows.video_mode
+#define MAIN_VIEW programm->windows.my_view
 #define VMODE_WD VMODE.width
 #define VMODE_HT VMODE.height
 #define VMODE_BPP VMODE.bitsPerPixel
+#define CORE_CLK programm->core_clock.clock
+#define CORE_TIME programm->core_clock.time
+#define CORE_SEC programm->core_clock.seconds
 
+#define PI_RAD PI / 180
+
+#define WINDOW_CENTER_X WINDOW_W / 2
+#define WINDOW_CENTER_Y WINDOW_H / 2
+#define VIEW_ZOOM programm->windows.view_zoom
+#define NEW_VIEW_X MOUSE_X - MOUSE_HOLD_X
+#define NEW_VIEW_Y MOUSE_Y - MOUSE_HOLD_Y
+
+#define FPS_VAR programm->fps_counter
+#define FPS FPS_VAR.fps
+#define FPS_TIME FPS_VAR.time_var.time
+#define FPS_SEC FPS_VAR.time_var.seconds
+#define FPS_CLK FPS_VAR.time_var.clock
+#define FPS_TXT FPS_VAR.fps_counter_text.text
+#define FPS_STR FPS_VAR.fps_counter_text.string
+#define FPS_FONT FPS_VAR.fps_counter_text.font
+#define FPS_POS FPS_VAR.fps_counter_text.position
+
+#define CAR_COUNT programm->car_counter.car_counter_text
+#define CAR_COUNT_TXT CAR_COUNT.text
+#define CAR_COUNT_STR CAR_COUNT.string
+#define CAR_COUNT_FONT CAR_COUNT.font
+#define CAR_COUNT_POS CAR_COUNT.position
+
+#define BG_IMG programm->background.image
 #define BG_SP programm->background.sprite
 #define BG_TX programm->background.texture
 #define BG_RATIO programm->background.map_ratio
@@ -52,6 +85,9 @@
 #define BG_COL_SP programm->background.collision_sprite
 #define BG_COL_TX programm->background.collision_texture
 #define BG_COL_IMG programm->background.collision_image
+#define BG_COL_SIZE programm->background.collision_size
+#define BG_COL_WD BG_COL_SIZE.x
+#define BG_COL_HT BG_COL_SIZE.y
 #define BG_SP_LID programm->background.lidar_sprite
 #define BG_LID_IMG programm->background.lidar
 #define BG_TX_LID programm->background.lidar_texture
@@ -61,6 +97,7 @@
 #define MAP1TXPATH "assets/map/track_one/track_one.png"
 #define MAP1COLPATH "assets/map/track_one/track_one_border.png"
 #define CARPATH "assets/car.png"
+#define FONT "assets/arial.ttf"
 
 #define CAR_ST programm->car
 #define CAR_SP programm->car[NBCAR].sprite
@@ -76,6 +113,7 @@
 #define CAR_WDINIT programm->car[NBCAR].actual.car_forward
 #define CAR_CWINIT programm->car[NBCAR].actual.car_forward
 #define CAR_INIT_LIDAR programm->car[NBCAR].lidar
+#define CAR_INIT_CLOCK programm->car[NBCAR].lidar->time_var
 
 #define CAR_NPX CAR_NEWPOS.x
 #define CAR_NPY CAR_NEWPOS.y
@@ -94,33 +132,70 @@
 #define CAR_CW CAR_ST[i].actual->cycle_wait
 #define CAR_IACTUAL CAR_ST[i].actual
 
+
 #define CAR_LIDAR CAR_ST[i].lidar
+#define CAR_LID_DEMI CAR_LIDAR->lidar_demi_ang
+#define LID_DIST CAR_LIDAR->lidar_distance
 #define LID_CX CAR_LIDAR->correct_x
 #define LID_CY CAR_LIDAR->correct_y
 #define LID_SX CAR_LIDAR->size_car_x
 #define LID_SY CAR_LIDAR->size_car_y
 #define LID_CO CAR_LIDAR->cos_ori
 #define LID_SI CAR_LIDAR->sin_ori
+#define LID_WR CAR_LIDAR->is_wall_right
+#define LID_WL CAR_LIDAR->is_wall_left
+#define LID_SISX CAR_LIDAR->lidsxlidsi
+#define LID_COSX CAR_LIDAR->lidsxlidco
+#define LID_INTERSECT CAR_LIDAR->intersection
+#define LID_ORI CAR_LIDAR->lidar_origin
+#define LID_VIEW_DIST CAR_LIDAR->lidar_view_distance
+#define DISTCONV CAR_LIDAR->dist_convert
+#define CAR_CLOCK CAR_LIDAR->time_var
 
-#define START_SIMULATION programm->start_simulation
-#define STOP_SIMULATION programm->stop_simulation
+#define SIMULATION programm->simulation
+#define SIMULATION_PAUSED programm->simulation_paused
+#define DEBUG programm->debug_state
+#define MOUSE_LEFT programm->keyboard.mouse_left
 
 #define NBCAR programm->nb_car
 
+#define K_Z programm->keyboard.z
+#define K_Q programm->keyboard.q
+#define K_S programm->keyboard.s
+#define K_D programm->keyboard.d
+#define MOUSE_X programm->keyboard.mouse_pos.x
+#define MOUSE_Y programm->keyboard.mouse_pos.y
+#define MOUSE_HOLD_X programm->keyboard.holded_at.x
+#define MOUSE_HOLD_Y programm->keyboard.holded_at.y
+
+
+
 typedef struct windows_s {
+    sfView* my_view;
+    int view_zoom;
+    sfVector2f viewSize;
     sfRenderWindow *window;
     sfVideoMode video_mode;
     sfEvent event;
 } windows_t;
 
+typedef struct time_var_s {
+    sfClock *clock;
+    sfTime time;
+    float seconds;
+} time_var_t;
+
+
 typedef struct background_s {
     sfVector2f map_ratio;
     sfVector2u size;
+    sfImage *image;
     sfTexture *texture;
     sfSprite *sprite;
     sfImage *collision_image;
     sfTexture *collision_texture;
     sfSprite *collision_sprite;
+    sfVector2u collision_size;
     sfImage *lidar;
     sfTexture *lidar_texture;
     sfSprite *lidar_sprite;
@@ -133,13 +208,36 @@ typedef struct car_actual_s {
     int cycle_wait;
 } car_actual_t;
 
+typedef struct keyboard_s {
+    bool z;
+    bool q;
+    bool s;
+    bool d;
+    bool mouse_left;
+    sfVector2i mouse_pos;
+    sfVector2i holded_at;
+} keyboard_t;
+
 typedef struct lidar_s {
+    int *lidar_distance;
+    time_var_t time_var;
+    int update_time;
+    sfVector2f intersection;
     float correct_x;
     float correct_y;
     float size_car_x;
     float size_car_y;
     float cos_ori;
     float sin_ori;
+    float lidsxlidco;
+    float lidsxlidsi;
+    int lidar_view_ang;
+    int lidar_demi_ang;
+    float lidar_view_distance;
+    float dist_convert;
+    sfVector2f lidar_origin;
+    bool is_wall_right;
+    bool is_wall_left;
 } lidar_t;
 
 typedef struct car_s {
@@ -154,14 +252,36 @@ typedef struct car_s {
     int id;
 } car_t;
 
+typedef struct text_s {
+    sfVector2f position;
+    sfText *text;
+    char *string;
+    sfFont *font;
+} text_t;
+
+typedef struct car_counter_s {
+    text_t car_counter_text;
+} car_counter_t;
+
+typedef struct fps_counter_s {
+    time_var_t time_var;
+    text_t fps_counter_text;
+    int fps;
+} fps_counter_t;
+
 typedef struct programm_s {
-    bool start_simulation;
-    bool stop_simulation;
+
+    bool simulation;
+    bool simulation_paused;
+    bool debug_state;
+    time_var_t core_clock;
+    keyboard_t keyboard;
     windows_t windows;
+    fps_counter_t fps_counter;
     background_t background;
+    car_counter_t car_counter;
     car_t *car;
     int nb_car;
-
 } programm_t;
 
 

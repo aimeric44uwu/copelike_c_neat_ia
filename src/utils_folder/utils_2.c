@@ -23,3 +23,23 @@ void my_puterror(char *str)
         i++;
     }
 }
+
+int my_strlen(const char *str)
+{
+    int len = 0;
+
+    while (*str++)
+        ++len;
+    return len;
+}
+
+int round_to_int(double x)
+{
+    int result;
+
+    if (x >= 0)
+        result = (int)(x + 0.5);
+    else
+        result = (int)(x - 0.5);
+    return result;
+}

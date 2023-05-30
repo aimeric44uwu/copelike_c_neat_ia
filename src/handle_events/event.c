@@ -7,25 +7,15 @@
 
 #include "my.h"
 
-static int round_to_int(float num)
-{
-    int result = (int) num;
-
-    if (num - result >= 0.5) {
-        result++;
-    }
-    return result;
-}
-
 void move_car(programm_t *programm)
 {
-    if (!START_SIMULATION)
+    if (!SIMULATION)
         return;
     sfImage_destroy(BG_LID_IMG);
     BG_LID_IMG = sfImage_createFromColor(BG_SIZE.x, BG_SIZE.y, sfTransparent);
     for (int i = 0; i < NBCAR; i++) {
         CAR_NEWPOS = CAR_POS;
-        float speed = CAR_FWSP - (CAR_BCSP / 2);
+        float speed = (CAR_FWSP - (CAR_BCSP / 2)) * FW_MX_SP;
         CAR_NPY += (sin((PI / 180) * CAR_ORI) * speed);
         CAR_NPX += (cos((PI / 180) * CAR_ORI) * speed);
         if (check_for_walls(programm, i) || is_outside_border(programm, i))
@@ -38,39 +28,31 @@ void move_car(programm_t *programm)
         CAR_POS = CAR_NEWPOS;
     }
     sfTexture_updateFromImage(BG_TX_LID, BG_LID_IMG, 0, 0);
-}
-
-static void keyboard_pressed(programm_t *programm)
-{
-    switch (EVNT.key.code) {
-        case sfKeyA:
-            create_car(programm);
-            break;
-        case sfKeyQ:
-            programm->car[0].actual->wheel_dir -= 0.3;
-            break;
-        case sfKeyD:
-            programm->car[0].actual->wheel_dir += 0.3;
-            break;
-        case sfKeyZ:
-            programm->car[0].actual->car_forward += 0.1;
-            programm->car[0].actual->car_backward = 0;
-            break;
-        case sfKeyS:
-            programm->car[0].actual->car_backward += 0.1;
-            programm->car[0].actual->car_forward = 0;
-            break;
-    }
+    move_zqsd_car(programm);
 }
 
 void event_handler(programm_t *programm)
 {
     if (EVNT.type == sfEvtClosed)
         close_program(programm);
-    if (EVNT.type == sfEvtMouseButtonPressed)
-        print_mouse_pos(programm);
+    if (EVNT.type == sfEvtMouseMoved && MOUSE_LEFT)
+        mouse_moved(programm);
+    if (EVNT.type == sfEvtMouseButtonPressed) {
+        MOUSE_HOLD_X = sfMouse_getPositionRenderWindow(WIND).x;
+        MOUSE_HOLD_Y = sfMouse_getPositionRenderWindow(WIND).y;
+        MOUSE_LEFT = !MOUSE_LEFT;
+    }
+    if (EVNT.type == sfEvtMouseButtonReleased)
+        MOUSE_LEFT = !MOUSE_LEFT;
     if (EVNT.type == sfEvtKeyPressed)
         keyboard_pressed(programm);
     if (EVNT.type == sfEvtKeyReleased)
-        programm->car[0].actual->wheel_dir = 0;
+        keyboard_released(programm);
 }
+// sfCircleShape* point = sfCircleShape_create();
+// sfCircleShape_setRadius(point, 10);
+// sfColor colorunder = sfImage_getPixel(BG_IMG, LID_CX, LID_CY);
+// sfCircleShape_setFillColor(point, colorunder);
+// sfCircleShape_setPosition(point, (sfVector2f) { CAR_POS.x, CAR_POS.y });
+// sfRenderWindow_drawCircleShape(WIND, point, NULL);
+// sfCircleShape_destroy(point);

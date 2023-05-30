@@ -15,17 +15,26 @@ static void create_windows(programm_t *programm)
     WIND = sfRenderWindow_create(VMODE, "Neat IA", sfDefaultStyle, NULL);
     sfRenderWindow_setFramerateLimit(WIND, 60);
     NBCAR = 0;
-    START_SIMULATION = true;
-    STOP_SIMULATION = false;
+    SIMULATION = true;
+    SIMULATION_PAUSED = false;
+    DEBUG = false;
     BG_RATIO = (sfVector2f){1.5, 1.5};
-
+    FPS_CLK = sfClock_create();
+    FPS_TIME = sfClock_getElapsedTime(FPS_CLK);
+    CORE_CLK = sfClock_create();
+    CORE_TIME = sfClock_getElapsedTime(CORE_CLK);
+    CORE_SEC = CORE_TIME.microseconds / 1000000.0;
+    MAIN_VIEW = sfView_create();
+    sfView_setSize(MAIN_VIEW, (sfVector2f){VMODE_WD, VMODE_HT});
+    sfView_setCenter(MAIN_VIEW, (sfVector2f){WINDOW_CENTER_X, WINDOW_CENTER_Y});
     if (!WIND)
         error_creating_element();
 }
 
 static void init_background(programm_t *programm)
 {
-    BG_TX = sfTexture_createFromFile(MAP1TXPATH, NULL);
+    BG_IMG = sfImage_createFromFile(MAP1TXPATH);
+    BG_TX = sfTexture_createFromImage(BG_IMG, NULL);
     BG_SP = sfSprite_create();
     BG_COL_IMG = sfImage_createFromFile(MAP1COLPATH);
     BG_COL_TX = sfTexture_createFromImage(BG_COL_IMG, NULL);
@@ -46,17 +55,20 @@ static void create_background(programm_t *programm)
     sfSprite_setTexture(BG_SP_LID, BG_TX_LID, sfTrue);
     sfSprite_setOrigin(BG_SP_LID, (sfVector2f){0, 0});
     sfSprite_setScale(BG_SP_LID, BG_RATIO);
-    sfSprite_setColor(BG_COL_SP, (sfColor){255, 255, 255, 0});
+    sfSprite_setColor(BG_COL_SP, (sfColor){255, 255, 255, 6});
     sfSprite_setOrigin(BG_COL_SP, (sfVector2f){0, 0});
     sfSprite_setScale(BG_COL_SP, BG_RATIO);
     sfSprite_setTexture(BG_SP, BG_TX, sfTrue);
-    sfSprite_setColor(BG_SP, (sfColor){255, 255, 255, 255});
+    sfSprite_setColor(BG_SP, (sfColor){255, 255, 255, 125});
     sfSprite_setOrigin(BG_SP, (sfVector2f){0, 2});
     sfSprite_setScale(BG_SP, BG_RATIO);
+    BG_COL_SIZE = sfTexture_getSize(BG_COL_TX);
 }
 
 void init_all(programm_t *programm)
 {
     create_windows(programm);
     create_background(programm);
+    create_text(programm);
+    init_car_counter(programm);
 }
