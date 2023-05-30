@@ -105,6 +105,17 @@
 #define CAR_TX programm->car[NBCAR].texture
 #define CAR_ID programm->car[NBCAR].id
 #define CAR_DEGR programm->car[NBCAR].orientation
+#define CAR_CR_COMMAND programm->car[NBCAR].command
+#define CAR_CR_TIME programm->car[NBCAR].alive_time
+#define CAR_CR_TIME_CLK programm->car[NBCAR].alive_time.clock
+#define CAR_CR_TIME_TIME programm->car[NBCAR].alive_time.time
+#define CAR_CR_TIME_SEC programm->car[NBCAR].alive_time.seconds
+#define CAR_CR_CDOWN programm->car[NBCAR].command_cooldown
+#define CAR_CR_LIDINIT programm->car[NBCAR].lid_initialized
+#define CAR_CR_CDOWN_CLK programm->car[NBCAR].command_cooldown.clock
+#define CAR_CR_CDOWN_TIME programm->car[NBCAR].command_cooldown.time
+#define CAR_CR_CDOWN_SEC programm->car[NBCAR].command_cooldown.seconds
+#define CAR_CR_COOLTIME programm->car[NBCAR].command_cooldown_time
 #define CAR_ACTUAL programm->car[NBCAR].actual
 #define CAR_NBCAR programm->car[NBCAR]
 #define CAR_NBCAR_POS programm->car[NBCAR].position
@@ -112,6 +123,8 @@
 #define CAR_BCINIT programm->car[NBCAR].actual.car_forward
 #define CAR_WDINIT programm->car[NBCAR].actual.car_forward
 #define CAR_CWINIT programm->car[NBCAR].actual.car_forward
+#define CAR_INU_LEN programm->car[NBCAR].len_entered
+
 #define CAR_INIT_LIDAR programm->car[NBCAR].lidar
 #define CAR_INIT_CLOCK programm->car[NBCAR].lidar->time_var
 
@@ -123,6 +136,7 @@
 
 #define CAR_STSP CAR_ST[i].sprite
 #define CAR_POS CAR_ST[i].position
+#define CAR_COMMAND CAR_ST[i].command
 #define CAR_IMGI programm->car[i].image
 #define CAR_NEWPOS CAR_ST[i].new_position
 #define CAR_ORI CAR_ST[i].orientation
@@ -131,9 +145,16 @@
 #define CAR_WD CAR_ST[i].actual->wheel_dir
 #define CAR_CW CAR_ST[i].actual->cycle_wait
 #define CAR_IACTUAL CAR_ST[i].actual
+#define CAR_COMMAND_CD CAR_ST[i].command_cooldown
+#define CAR_INP_LEN CAR_ST[i].len_entered
+#define CAR_COMMAND_COOLTIME CAR_ST[i].command_cooldown_time
+#define CAR_COMMAND_CD_CLK CAR_ST[i].command_cooldown.clock
+#define CAR_COMMAND_CD_TIME CAR_ST[i].command_cooldown.time
+#define CAR_COMMAND_CD_SEC CAR_ST[i].command_cooldown.seconds
 
 
 #define CAR_LIDAR CAR_ST[i].lidar
+#define CAR_LID_INIT CAR_ST[i].lid_initialized
 #define CAR_LID_DEMI CAR_LIDAR->lidar_demi_ang
 #define LID_DIST CAR_LIDAR->lidar_distance
 #define LID_CX CAR_LIDAR->correct_x
@@ -248,6 +269,12 @@ typedef struct car_s {
     car_actual_t *actual;
     sfVector2f position;
     sfVector2f new_position;
+    bool lid_initialized;
+    time_var_t alive_time;
+    int len_entered;
+    char *command;
+    time_var_t command_cooldown;
+    float command_cooldown_time;
     float orientation;
     int id;
 } car_t;

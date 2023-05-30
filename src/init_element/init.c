@@ -6,6 +6,7 @@
 */
 
 #include "my.h"
+#include <ncurses.h>
 
 static void create_windows(programm_t *programm)
 {

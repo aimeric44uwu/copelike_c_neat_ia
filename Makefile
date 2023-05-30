@@ -26,10 +26,14 @@ SRC				=		src/graphical_motor.c						\
 						                                            \
 						src/handle_events/keyboard/keyboard_pressed.c 		\
 						src/handle_events/keyboard/keyboard_released.c 		\
+						src/handle_events/car_command.c				\
 						src/handle_events/event.c 					\
 						src/handle_events/mouse.c 					\
+						src/handle_events/exec_car_command/get_info_lidar.c \
+						                                            \
 																	\
 						src/actions.c 								\
+						src/read_input.c   							\
 						                                            \
 						src/utils_folder/utils.c 					\
 						src/utils_folder/utils_2.c 					\
@@ -45,7 +49,7 @@ LIB_CSFML		=		-lcsfml-window -lcsfml-graphics -lcsfml-system \
 
 INCLUDE_DIR 	=		-I ./include
 
-CFLAGS			=		$(INCLUDE_DIR) $(LIB_CSFML) $(WARNING) -lm
+CFLAGS			=		$(INCLUDE_DIR) $(LIB_CSFML) $(WARNING) -lm -lncurses
 
 SRC_TEST		=		$(filter-out src/main.c,$(SRC))
 

@@ -51,6 +51,7 @@ static void foreach_angle(programm_t *programm, int i, int angle)
         if (distance > 500)
             distance = 500;
         LID_DIST[angle + 30] = round_to_int((distance / 500) * 3050);
+        CAR_LID_INIT = true;
         sfClock_restart(CAR_CLOCK.clock);
     }
 }

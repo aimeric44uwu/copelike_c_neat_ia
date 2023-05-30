@@ -27,12 +27,19 @@ static void create_clock(programm_t *programm)
     CAR_INIT_CLOCK.time = sfClock_getElapsedTime(CAR_INIT_CLOCK.clock);
     CAR_INIT_CLOCK.seconds = 0.0;
     CAR_INIT_LIDAR->update_time = 0.1;
+    CAR_CR_CDOWN_CLK = sfClock_create();
+    CAR_CR_CDOWN_TIME = sfClock_getElapsedTime(CAR_CR_CDOWN_CLK);
+    CAR_CR_CDOWN_SEC = 0.0;
+    CAR_CR_COOLTIME = 0.3;
+    CAR_CR_TIME_CLK = sfClock_create();
+    CAR_CR_TIME_TIME = sfClock_getElapsedTime(CAR_CR_TIME_CLK);
+    CAR_CR_TIME_SEC = 0.0;
 }
 
 static void create_spec(programm_t *programm)
 {
     CAR_ACTUAL = malloc(sizeof(car_t));
-    CAR_ACTUAL->car_forward = 0.5;
+    CAR_ACTUAL->car_forward = 0.0;
     CAR_ACTUAL->car_backward = 0.0;
     CAR_ACTUAL->wheel_dir = 0.0;
     CAR_ACTUAL->cycle_wait = 0;
@@ -46,6 +53,10 @@ void create_car(programm_t *programm)
     CAR_SP = sfSprite_create();
     CAR_ID = NBCAR;
     CAR_DEGR = CAR_BASE;
+    CAR_INU_LEN = 0;
+    CAR_CR_COMMAND = malloc(sizeof(char) * 200);
+    strcpy(CAR_CR_COMMAND, "NULL");
+    CAR_CR_LIDINIT = false;
     CAR_NBCAR_POS = (sfVector2f){START_X, START_Y};
     create_spec(programm);
     sfSprite_setRotation(CAR_SP, CAR_DEGR);

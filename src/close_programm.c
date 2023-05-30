@@ -23,6 +23,8 @@ int close_program(programm_t *programm)
     sfRenderWindow_destroy(WIND);
     free(programm->car);
     free(programm);
+    endwin();
+    nocbreak();
     my_putstr("programm closed without error\n");
     exit(0);
     return 0;

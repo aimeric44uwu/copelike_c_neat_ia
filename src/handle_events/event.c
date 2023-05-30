@@ -9,8 +9,6 @@
 
 void move_car(programm_t *programm)
 {
-    if (!SIMULATION)
-        return;
     sfImage_destroy(BG_LID_IMG);
     BG_LID_IMG = sfImage_createFromColor(BG_SIZE.x, BG_SIZE.y, sfTransparent);
     for (int i = 0; i < NBCAR; i++) {
@@ -26,6 +24,7 @@ void move_car(programm_t *programm)
         sfSprite_setPosition(CAR_STSP, CAR_NEWPOS);
         sfSprite_setRotation(CAR_STSP, round_to_int(CAR_ORI));
         CAR_POS = CAR_NEWPOS;
+        handle_car_command(programm, i);
     }
     sfTexture_updateFromImage(BG_TX_LID, BG_LID_IMG, 0, 0);
     move_zqsd_car(programm);
