@@ -38,6 +38,9 @@ static void keyboard_pressed_ptwo(programm_t *programm)
         case sfKeyM:
             increase_zoom(programm);
             break;
+        case sfKeyT:
+            SIMULATION = !SIMULATION;
+            break;
     }
 }
 

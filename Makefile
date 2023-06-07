@@ -29,7 +29,19 @@ SRC				=		src/graphical_motor.c						\
 						src/handle_events/car_command.c				\
 						src/handle_events/event.c 					\
 						src/handle_events/mouse.c 					\
+						src/handle_events/exec_car_command/car_backward.c 	\
+						src/handle_events/exec_car_command/car_forward.c 	\
+						src/handle_events/exec_car_command/car_speed_max.c 	\
+						src/handle_events/exec_car_command/car_speed_min.c 	\
+						src/handle_events/exec_car_command/current_speed.c 	\
+						src/handle_events/exec_car_command/current_wheel.c 	\
 						src/handle_events/exec_car_command/get_info_lidar.c \
+						src/handle_events/exec_car_command/info_simtime.c \
+						src/handle_events/exec_car_command/sim_not_started.c \
+						src/handle_events/exec_car_command/start_simulation.c \
+						src/handle_events/exec_car_command/stop_simulation.c \
+						src/handle_events/exec_car_command/unknown_command.c \
+						src/handle_events/exec_car_command/wheel_dir.c \
 						                                            \
 																	\
 						src/actions.c 								\

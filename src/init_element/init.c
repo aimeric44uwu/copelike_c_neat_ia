@@ -6,7 +6,6 @@
 */
 
 #include "my.h"
-#include <ncurses.h>
 
 static void create_windows(programm_t *programm)
 {
@@ -72,4 +71,7 @@ void init_all(programm_t *programm)
     create_background(programm);
     create_text(programm);
     init_car_counter(programm);
+    init_debug_mode(programm);
+    init_simu_stat_text(programm);
+    initscr();
 }

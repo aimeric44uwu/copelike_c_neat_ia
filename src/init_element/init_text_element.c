@@ -32,3 +32,29 @@ void init_car_counter(programm_t *programm)
     sfText_setPosition(CAR_COUNT_TXT, CAR_COUNT_POS);
     sfText_setColor(CAR_COUNT_TXT, sfBlack);
 }
+
+void init_debug_mode(programm_t *programm)
+{
+    DEBUG_FONT = sfFont_createFromFile(FONT);
+    DEBUG_TXT = sfText_create();
+    DEBUG_POS = (sfVector2f){1100, 50};
+    DEBUG_STR = "debug mode : on";
+    sfText_setString(DEBUG_TXT, DEBUG_STR);
+    sfText_setFont(DEBUG_TXT, DEBUG_FONT);
+    sfText_setCharacterSize(DEBUG_TXT, 50);
+    sfText_setPosition(DEBUG_TXT, DEBUG_POS);
+    sfText_setColor(DEBUG_TXT, sfBlack);
+}
+
+void init_simu_stat_text(programm_t *programm)
+{
+    SIMULATION_FONT = sfFont_createFromFile(FONT);
+    SIMULATION_TXT = sfText_create();
+    SIMULATION_POS = (sfVector2f){700, 50};
+    SIMULATION_STR = "simulation : off";
+    sfText_setString(SIMULATION_TXT, SIMULATION_STR);
+    sfText_setFont(SIMULATION_TXT, SIMULATION_FONT);
+    sfText_setCharacterSize(SIMULATION_TXT, 50);
+    sfText_setPosition(SIMULATION_TXT, SIMULATION_POS);
+    sfText_setColor(SIMULATION_TXT, sfBlack);
+}

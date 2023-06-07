@@ -20,13 +20,12 @@ void main_loop(programm_t *programm)
             event_handler(programm);
         sfRenderWindow_clear(WIND, sfBlack);
         draw_background(programm);
-        if (SIMULATION)
-            move_car(programm);
+        move_car(programm);
         draw_cars(programm);
         update_fps(programm);
         draw_number_of_car(programm);
+        draw_infos(programm);
         sfRenderWindow_setView(WIND, programm->windows.my_view);
-
         sfRenderWindow_display(WIND);
     }
 }

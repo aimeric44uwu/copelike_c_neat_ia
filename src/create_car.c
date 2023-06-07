@@ -30,7 +30,7 @@ static void create_clock(programm_t *programm)
     CAR_CR_CDOWN_CLK = sfClock_create();
     CAR_CR_CDOWN_TIME = sfClock_getElapsedTime(CAR_CR_CDOWN_CLK);
     CAR_CR_CDOWN_SEC = 0.0;
-    CAR_CR_COOLTIME = 0.3;
+    CAR_CR_COOLTIME = 0.1;
     CAR_CR_TIME_CLK = sfClock_create();
     CAR_CR_TIME_TIME = sfClock_getElapsedTime(CAR_CR_TIME_CLK);
     CAR_CR_TIME_SEC = 0.0;
@@ -54,6 +54,7 @@ void create_car(programm_t *programm)
     CAR_ID = NBCAR;
     CAR_DEGR = CAR_BASE;
     CAR_INU_LEN = 0;
+    CAR_INI_SIMSTART = false;
     CAR_CR_COMMAND = malloc(sizeof(char) * 200);
     strcpy(CAR_CR_COMMAND, "NULL");
     CAR_CR_LIDINIT = false;

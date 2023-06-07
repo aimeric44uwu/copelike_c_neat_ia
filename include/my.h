@@ -16,6 +16,10 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <math.h>
+#include <string.h>
+#include <time.h>
+#include <ncurses.h>
+
 
 #define PI 3.14159265
 
@@ -41,6 +45,14 @@
 #define WIND programm->windows.window
 #define VMODE programm->windows.video_mode
 #define MAIN_VIEW programm->windows.my_view
+#define DEBUG_TXT programm->debug_text.text
+#define DEBUG_STR programm->debug_text.string
+#define DEBUG_POS programm->debug_text.position
+#define DEBUG_FONT programm->debug_text.font
+#define SIMULATION_TXT programm->simulation_status.text
+#define SIMULATION_STR programm->simulation_status.string
+#define SIMULATION_POS programm->simulation_status.position
+#define SIMULATION_FONT programm->simulation_status.font
 #define VMODE_WD VMODE.width
 #define VMODE_HT VMODE.height
 #define VMODE_BPP VMODE.bitsPerPixel
@@ -124,6 +136,7 @@
 #define CAR_WDINIT programm->car[NBCAR].actual.car_forward
 #define CAR_CWINIT programm->car[NBCAR].actual.car_forward
 #define CAR_INU_LEN programm->car[NBCAR].len_entered
+#define CAR_INI_SIMSTART programm->car[NBCAR].sim_started
 
 #define CAR_INIT_LIDAR programm->car[NBCAR].lidar
 #define CAR_INIT_CLOCK programm->car[NBCAR].lidar->time_var
@@ -151,6 +164,7 @@
 #define CAR_COMMAND_CD_CLK CAR_ST[i].command_cooldown.clock
 #define CAR_COMMAND_CD_TIME CAR_ST[i].command_cooldown.time
 #define CAR_COMMAND_CD_SEC CAR_ST[i].command_cooldown.seconds
+#define CAR_SIMSTART CAR_ST[i].sim_started
 
 
 #define CAR_LIDAR CAR_ST[i].lidar
@@ -270,6 +284,7 @@ typedef struct car_s {
     sfVector2f position;
     sfVector2f new_position;
     bool lid_initialized;
+    bool sim_started;
     time_var_t alive_time;
     int len_entered;
     char *command;
@@ -301,6 +316,8 @@ typedef struct programm_s {
     bool simulation;
     bool simulation_paused;
     bool debug_state;
+    text_t debug_text;
+    text_t simulation_status;
     time_var_t core_clock;
     keyboard_t keyboard;
     windows_t windows;
@@ -330,3 +347,41 @@ void print_mouse_pos(programm_t *programm);
 bool is_outside_border(programm_t *programm, int i);
 float my_abs(float num);
 void my_putchar(char c);
+void prompt_usr_cmd(programm_t *programm, int i);
+void keyboard_released(programm_t *programm);
+void keyboard_pressed(programm_t *programm);
+void mouse_moved(programm_t *programm);
+void move_zqsd_car(programm_t *programm);
+void handle_car_command(programm_t *programm, int i);
+int round_to_int(double x);
+void exec_unknown_command(void);
+void exec_stop_simulation(programm_t *programm, int i);
+void exec_start_simulation(programm_t *programm, int i);
+void exec_get_current_wheels(programm_t *programm, int i);
+void exec_get_current_speed(programm_t *programm, int i);
+void exec_get_info_simtime(programm_t *programm, int i);
+void exec_get_car_speed_max(programm_t *programm, int i);
+void exec_get_car_speed_min(programm_t *programm, int i);
+void exec_wheel_dir(programm_t *programm, int i);
+void exec_car_forward(programm_t *programm, int i);
+void exec_car_backwards(programm_t *programm, int i);
+void exec_get_info_lidar(programm_t *programm, int i);
+void sim_not_started(programm_t *programm, int i);
+int my_strlen(const char *str);
+int round_to_int(double x);
+void get_distance(programm_t *programm, int i);
+void draw_lidar(programm_t *programm, int i);
+void draw_every_lidar(programm_t *programm, int i);
+char *int_to_char_array(char *pretext, int i);
+void create_text(programm_t *programm);
+void init_car_counter(programm_t *programm);
+void init_debug_mode(programm_t *programm);
+void init_simu_stat_text(programm_t *programm);
+void draw_infos(programm_t *programm);
+void draw_number_of_car(programm_t *programm);
+void update_fps(programm_t *programm);
+
+
+
+
+

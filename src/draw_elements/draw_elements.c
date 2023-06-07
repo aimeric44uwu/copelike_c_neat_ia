@@ -7,6 +7,21 @@
 
 #include "my.h"
 
+void draw_infos(programm_t *programm)
+{
+    if (SIMULATION) {
+        sfText_setColor(SIMULATION_TXT, sfGreen);
+        SIMULATION_STR = "simulation : on";
+    } else {
+        sfText_setColor(SIMULATION_TXT, sfBlack);
+        SIMULATION_STR = "simulation : off";
+    }
+    sfText_setString(SIMULATION_TXT, SIMULATION_STR);
+    sfRenderWindow_drawText(WIND, SIMULATION_TXT, NULL);
+    if (DEBUG)
+        sfRenderWindow_drawText(WIND, DEBUG_TXT, NULL);
+}
+
 void draw_number_of_car(programm_t *programm)
 {
     CAR_COUNT_STR = malloc(sizeof(char) * 200);
